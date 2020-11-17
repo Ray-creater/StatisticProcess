@@ -89,20 +89,37 @@ class CurrentComponent():
         # plt.plot(data[2],data[3],color='r')
         return  {'Disp':fitWholeX, 'Force': fitWholeY} 
 
+    
+    def modifiedCurveDecreased(self,interval:int):
+        '''Every interval numbers data produce a valid data to decrease total data number''' 
+        modifiedData=self.modifiedCurve()
+        DispDecreased,ForceDecreased=[],[]
+        for i in range(0,len(modifiedData['Disp']),interval):
+            DispDecreased.append(modifiedData['Disp'][i])
+            ForceDecreased.append(modifiedData['Force'][i])
+        return {'Disp':DispDecreased,'Force':ForceDecreased}
+
 
     def skeleton(self):
         self.readData()
         self.readTimeChangeIndex()
-        modifiedData=self.modifiedCurve()
-        changeDisp,changeForce=[],[]
-        temp,Data={},{}
-        for i in self.TimeChangeIndex:
-            # changeDisp.append(self.OriginalData['Disp'][i])
-            # changeForce.append(self.OriginalData['Force'][i])
-            # temp[modifiedData['Disp'][i]]=modifiedData['Force'][i]
-            temp[self.OriginalData['Disp'][i]]=self.OriginalData['Force'][i]
-        for i in sorted(temp):
-            Data[i]=temp[i]
+        modifiedDataDecreased=self.modifiedCurveDecreased(100)
+        DispMin,DispMax=min(modifiedDataDecreased['Disp']),max(modifiedDataDecreased['Disp'])
+        Data={}
+        for i in range(int(DispMin),int(DispMax),1):
+            for j,k in enumerate(modifiedDataDecreased['Disp']):
+                if i<=k<=i+1:
+                    Data[i]=modifiedDataDecreased['Force'][j]
+                    break
+                else:
+                    pass
+        # for i in self.TimeChangeIndex:
+        #     # changeDisp.append(self.OriginalData['Disp'][i])
+        #     # changeForce.append(self.OriginalData['Force'][i])
+        #     # temp[modifiedData['Disp'][i]]=modifiedData['Force'][i]
+        #     temp[self.OriginalData['Disp'][i]]=self.OriginalData['Force'][i]
+        # for i in sorted(temp):
+        #     Data[i]=temp[i]
         self.Skeleton={'Disp':list(Data.keys()),'Force':list(Data.values())}
 
     
