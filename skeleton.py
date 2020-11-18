@@ -8,10 +8,8 @@ def main():
     OriginalPathData=os.path.join(OriginalPath,'1212.dat')
     OriginalPathTimeLimit=os.path.join(OriginalPath,'1212.log')
     component=hy.CurrentComponent(OriginalPathData,OriginalPathTimeLimit)
-    component.skeleton()
-    print(component.Skeleton)
-    plt.plot(component.Skeleton['Disp'],component.Skeleton['Force'])
-    plt.show()
+    component.yieldPoint()
+    component.visualData()
 
 
 

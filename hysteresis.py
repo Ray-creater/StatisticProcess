@@ -100,10 +100,10 @@ class CurrentComponent():
         return {'Disp':DispDecreased,'Force':ForceDecreased}
 
 
-    def skeleton(self):
+    def skeleton(self,modifiedSkeleton=0):
         self.readData()
         self.readTimeChangeIndex()
-        modifiedDataDecreased=self.modifiedCurveDecreased(100)
+        modifiedDataDecreased=self.modifiedCurveDecreased(10)
         DispMin,DispMax=min(modifiedDataDecreased['Disp']),max(modifiedDataDecreased['Disp'])
         Data={}
         for i in range(int(DispMin),int(DispMax),1):
@@ -120,7 +120,35 @@ class CurrentComponent():
         #     temp[self.OriginalData['Disp'][i]]=self.OriginalData['Force'][i]
         # for i in sorted(temp):
         #     Data[i]=temp[i]
-        self.Skeleton={'Disp':list(Data.keys()),'Force':list(Data.values())}
+        skeleton={'Disp':list(Data.keys()),'Force':list(Data.values())}
+        if modifiedSkeleton:
+            polyCoeff=np.polyfit(skeleton['Disp'],skeleton['Force'],4)
+            polyNominal=np.poly1d(polyCoeff)
+            fitedCurve=[]
+            for i in skeleton['Disp']:
+                fitedCurve.append(polyNominal(i))
+            skeleton['Force']=fitedCurve
+        return skeleton
+
+
+    def visualData(self,skeleton=0,modifiedCurve=0):
+        '''Change values of para to plot coorespond data: 0 for not ploting and non-0 for ploting'''
+        if skeleton:
+            skeleton=self.skeleton()
+            plt.plot(skeleton['Disp'],skeleton['Force'])
+        if modifiedCurve:
+            modifiedCurve=self.modifiedCurveDecreased(100)
+            plt.plot(modifiedCurve['Disp'],modifiedCurve['Force'])
+        plt.show()
+
+    def yieldPoint(self):
+        skeleton=self.skeleton(1)
+       
+        
+        plt.plot(skeleton['Disp'],skeleton['Force'])
+        
+        
+    
 
     
 
