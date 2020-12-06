@@ -102,7 +102,7 @@ class CurrentComponent():
 
     def skeleton(self,modifiedSkeleton=0):
     ''' Get skeleton for component with choose highest(positive) or lowest(negative) value for every Disp \n
-    modifiedSkeleton provided with non-0 present fit skeleton with fourth polynominals'''
+        ModifiedSkeleton  provided with non-0 present fit skeleton with fourth polynominals'''
         self.readData()
         self.readTimeChangeIndex()
         modifiedDataDecreased=self.modifiedCurveDecreased(10)

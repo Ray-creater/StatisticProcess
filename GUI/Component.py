@@ -144,8 +144,6 @@ class CurrentComponent():
 
     def yieldPoint(self):
         skeleton=self.skeleton(1)
-       
-        
         plt.plot(skeleton['Disp'],skeleton['Force'])
         
         
