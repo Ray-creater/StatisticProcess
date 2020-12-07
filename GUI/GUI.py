@@ -48,10 +48,13 @@ class Mywindow(QMainWindow):
         self.plotButton=QPushButton('plot')
         self.plotButton.setMaximumWidth(100)
         self.functionLayout.addWidget(self.plotButton,alignment=Qt.AlignLeft)
-        self.checkBoxListStr=['Hysteresis','Skeleton']
-        self.checkBoxList=[QCheckBox(i) for i in self.checkBoxListStr]
+        self.checkBoxListStr=['Hysteresis','Skeleton','Origin Hy']
+        self.checkBoxList=[QRadioButton(i) for i in self.checkBoxListStr]
         for i in self.checkBoxList:
             self.functionLayout.addWidget(i,alignment=Qt.AlignLeft)
+        self.checkBoxList[0].toggled.connect(self.modifiedHyplot)
+        self.checkBoxList[1].toggled.connect(self.skeletonplot)
+        self.checkBoxList[2].toggled.connect(self.hyplot)
 
         self.message=QTextEdit()
         self.message.append('>>>Program Start')
@@ -61,7 +64,7 @@ class Mywindow(QMainWindow):
         self.datFilePathButton.clicked.connect(self.chooseDatFile)
         self.logFilePathButton.clicked.connect(self.chooseLogFile)
         self.readButton.clicked.connect(self.readData)
-        self.plotButton.clicked.connect(self.plot)
+        self.plotButton.clicked.connect(self.draw)
         ##Hysteresis stretch adjust
         self.hysteresisStretchList=[1,1,4,1]
         for i,j in enumerate(self.hysteresisStretchList):
@@ -105,7 +108,7 @@ class Mywindow(QMainWindow):
         self.wholeWidgetLayout.setStretch(0,4)
         self.wholeWidgetLayout.setStretch(1,1)
 
-        self.setGeometry(200,125,1500,800)
+        self.setGeometry(200,125,1200,800)
         self.setWindowTitle('Analysis')
         self.show()
 
@@ -127,30 +130,28 @@ class Mywindow(QMainWindow):
             self.component=cp.CurrentComponent(self.lableDatFile.text(),self.lableLogFile.text())
             self.message.append('>>>Read compelete')
 
-    def plot(self):
-        if self.checkBoxList[0].isChecked() and not self.checkBoxList[1].isChecked():
-            self.component.visualData(0,1,1)
-            pic=QPixmap('1.png')
-            self.lablePlot.setPixmap(pic)
-            self.message.append('>>>Plot complete')
-        elif not self.checkBoxList[0].isChecked() and self.checkBoxList[1].isChecked():
-            self.component.visualData(1,0,1)
-            pic=QPixmap('1.png')
-            self.lablePlot.setPixmap(pic)
-            self.message.append('>>>Plot complete')
-        elif self.checkBoxList[0].isChecked() and self.checkBoxList[1].isChecked():
-            self.component.visualData(1,1,1)
-            pic=QPixmap('1.png')
-            self.lablePlot.setPixmap(pic)
-            self.message.append('>>>Plot complete')
+    def draw(self):
+        self.component.visualData(1,0,0,'Skeleton')
+        self.component.visualData(0,1,0,'ModifiedHysteresis')
+        self.component.visualData(0,0,1,'Hysteresis')
+
+    def modifiedHyplot(self):
+        pic=QPixmap('ModifiedHysteresis.png')
+        self.lablePlot.setPixmap(pic)
+
+    def hyplot(self):
+        pic=QPixmap('Hysteresis.png')
+        self.lablePlot.setPixmap(pic)
+
+    def skeletonplot(self):
+        pic=QPixmap('Skeleton.png')
+        self.lablePlot.setPixmap(pic)
+        
+
 
     def calculate(self):
         if self.yieldMethodRadioButton[0].isChecked():
             self.labelValue[0].setText(str(self.component.yieldPoint('Area')['Disp']))
-
-    
-
-
 
 
 def main():

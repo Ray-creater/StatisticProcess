@@ -132,16 +132,23 @@ class CurrentComponent():
         return skeleton
 
 
-    def visualData(self,skeleton=0,modifiedCurve=0,save=1):
+    def visualData(self,skeleton=0,modifiedCurve=0,originalCurve=0,saveflag=1):
         '''Change values of para to plot coorespond data: 0 for not ploting and non-0 for ploting'''
         if skeleton:
             skeleton=self.skeleton(1)
-            plt.plot(skeleton['Disp'],skeleton['Force'])
+            fig1,axe1=plt.subplots(1,1)
+            axe1.plot(skeleton['Disp'],skeleton['Force'])
+            fig1.savefig(str(saveflag)+".png")
         if modifiedCurve:
             modifiedCurve=self.modifiedCurveDecreased(100)
-            plt.plot(modifiedCurve['Disp'],modifiedCurve['Force'])
-        if save:
-            plt.savefig("1.png")
+            fig2,axe2=plt.subplots(1,1)
+            axe2.plot(modifiedCurve['Disp'],modifiedCurve['Force'])
+            fig2.savefig(str(saveflag)+".png")
+        if originalCurve:
+            fig3,axe3=plt.subplots(1,1)
+            axe3.plot(self.OriginalData['Disp'],self.OriginalData['Force'])
+            fig3.savefig(str(saveflag)+".png")
+
 
     def yieldPoint(self,method:str):
         skeleton=self.skeleton(1)

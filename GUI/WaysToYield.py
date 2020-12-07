@@ -1,5 +1,6 @@
 
 import numpy as np
+import scipy as sp
 
 def areaMethod(skeleton:dict):
     '''Using principle of equal Area to seek yield point (Consume same amount of energy from zero to peak )''' 
@@ -8,14 +9,15 @@ def areaMethod(skeleton:dict):
     ForcePeak=max(skeleton['Force'])
     DispPeak=skeleton['Disp'][skeleton['Force'].index(ForcePeak)]
     SwapAreaContrast,DispSelectYieldPoint=10000,0
-    for DispCrossPonit in np.linspace(0,DispPeak,0.1):
+    for DispCrossPonit in np.linspace(0,DispPeak,20):
         ForceCrossPoint=polyNominal(DispCrossPonit)
         DispYieldPoint=DispCrossPonit/ForceCrossPoint*ForcePeak
-        AreaContrast=1/2*DispYieldPoint*ForcePeak+ForcePeak*(DispPeak-DispYieldPoint)-np.integer(polyNominal,0,DispPeak)
+        AreaContrast=1/2*DispYieldPoint*ForcePeak+ForcePeak*(DispPeak-DispYieldPoint)-sp.integrate.quad(polyNominal,0,DispPeak)[0]
         if AreaContrast<SwapAreaContrast:
             SwapAreaContrast=AreaContrast
             DispSelectYieldPoint=DispYieldPoint
     return {"Disp":DispSelectYieldPoint,'Force':polyNominal(DispSelectYieldPoint),'ErrorGap':SwapAreaContrast}
+
 
 def geometry(skeleton:dict):
     polyCoeff=np.polyfit(skeleton['Disp'],skeleton['Force'],4)
