@@ -97,6 +97,7 @@ class Mywindow(QMainWindow):
         ##caculate button
         self.caculateButton=QPushButton('Calculate')
         self.paraWidgetLayout.addWidget(self.caculateButton,alignment=Qt.AlignCenter)
+        self.caculateButton.clicked.connect(self.calculate)
 
 
 
@@ -142,6 +143,10 @@ class Mywindow(QMainWindow):
             pic=QPixmap('1.png')
             self.lablePlot.setPixmap(pic)
             self.message.append('>>>Plot complete')
+
+    def calculate(self):
+        if self.yieldMethodRadioButton[0].isChecked():
+            self.labelValue[0].setText(str(self.component.yieldPoint('Area')['Disp']))
 
     
 

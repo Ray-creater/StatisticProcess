@@ -1,6 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 import numpy as np 
+from WaysToYield import *
 
 class CurrentComponent():
     '''Construct a Component Class with init input path of .dat and .log'''
@@ -131,10 +132,10 @@ class CurrentComponent():
         return skeleton
 
 
-    def visualData(self,skeleton=0,modifiedCurve=0,save=0):
+    def visualData(self,skeleton=0,modifiedCurve=0,save=1):
         '''Change values of para to plot coorespond data: 0 for not ploting and non-0 for ploting'''
         if skeleton:
-            skeleton=self.skeleton()
+            skeleton=self.skeleton(1)
             plt.plot(skeleton['Disp'],skeleton['Force'])
         if modifiedCurve:
             modifiedCurve=self.modifiedCurveDecreased(100)
@@ -142,9 +143,16 @@ class CurrentComponent():
         if save:
             plt.savefig("1.png")
 
-    def yieldPoint(self):
+    def yieldPoint(self,method:str):
         skeleton=self.skeleton(1)
-        plt.plot(skeleton['Disp'],skeleton['Force'])
+        if method=='Area':
+            yieldP=areaMethod(skeleton)
+        elif method=='Geo':
+            yieldP=geometry(skeleton)
+        elif method=='Rpark':
+            yieldP=rpartMethod(skeleton)
+        return yieldP
+        
         
         
     

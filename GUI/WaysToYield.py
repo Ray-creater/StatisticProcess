@@ -28,7 +28,7 @@ def geometry(skeleton:dict):
     DispYieldPoint=DispSwap/ForceSwap*ForcePeak
     return {'Disp':DispYieldPoint,'Force':polyNominal(DispYieldPoint)}
 
-def rpartMethod(skeleton:dic):
+def rpartMethod(skeleton:dict):
     polyCoeff=np.polyfit(skeleton['Disp'],skeleton['Force'],4)
     polyNominal=np.poly1d(polyCoeff)
     ForcePeak=max(skeleton['Force'])
@@ -42,15 +42,15 @@ def rpartMethod(skeleton:dic):
     DispYieldPoint=DispSwap/ForceSwap*ForcePeak
     return {'Disp':DispYieldPoint,'Force':polyNominal(DispYieldPoint)}
 
-def energyDissipation(skeleton:dict):
-    DispMax,DispMin=max(skeleton['Disp']),min(skeleton['Disp'])
-    IndexMax,IndexMin=skeleton['Disp'].index(DispMax),skeleton['Force'].index(DispMin)
-    if IndexMax<IndexMin:
-        IndexMin,IndexMax=IndexMax,IndexMin
-    oneHalfLoop={"Disp":skeleton['Disp'][IndexMin:IndexMax],'Force':skeleton['Force'][IndexMin,IndexMax]}
-    remainDisp,remainForce=skeleton['Disp'][0:IndexMin],skeleton['Force'][0:IndexMin]
-    remainDisp.extend(skeleton['Disp'][IndexMax:])
-    remainForce.extend(skeleton['Force'][IndexMax:])
+# def energyDissipation(skeleton:dict):
+#     DispMax,DispMin=max(skeleton['Disp']),min(skeleton['Disp'])
+#     IndexMax,IndexMin=skeleton['Disp'].index(DispMax),skeleton['Force'].index(DispMin)
+#     if IndexMax<IndexMin:
+#         IndexMin,IndexMax=IndexMax,IndexMin
+#     oneHalfLoop={"Disp":skeleton['Disp'][IndexMin:IndexMax],'Force':skeleton['Force'][IndexMin,IndexMax]}
+#     remainDisp,remainForce=skeleton['Disp'][0:IndexMin],skeleton['Force'][0:IndexMin]
+#     remainDisp.extend(skeleton['Disp'][IndexMax:])
+#     remainForce.extend(skeleton['Force'][IndexMax:])
     
 
 
